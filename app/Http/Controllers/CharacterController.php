@@ -43,7 +43,7 @@ class CharacterController extends Controller
 
         $character = Character::create($validated);
 
-        return redirect()->route('characters.show', $character);
+        return redirect()->route('characters.show', $character)->with('status', 'Ficha criada com sucesso.');
     }
 
     public function show(Character $character): View
@@ -71,7 +71,7 @@ class CharacterController extends Controller
 
         $character->update($validated);
 
-        return redirect()->route('characters.show', $character);
+        return redirect()->route('characters.show', $character)->with('status', 'Ficha atualizada com sucesso.');
     }
 
     public function destroy(Character $character): RedirectResponse

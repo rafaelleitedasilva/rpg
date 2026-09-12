@@ -61,4 +61,23 @@ class Dnd5eCharacterServiceTest extends TestCase
         $this->assertFalse($this->service->supportsSpellcasting('Guerreiro'));
         $this->assertFalse($this->service->supportsSpellcasting(null));
     }
+
+    public function test_xp_progress_measures_advance_within_the_current_level(): void
+    {
+        // Level 4 spans 2700-6500 XP; sitting at 4600 is halfway through that span.
+        $progress = $this->service->xpProgress(4, 4600);
+
+        $this->assertSame(1900, $progress['current']);
+        $this->assertSame(3800, $progress['needed']);
+        $this->assertSame(50, $progress['percent']);
+        $this->assertFalse($progress['maxed']);
+    }
+
+    public function test_xp_progress_is_maxed_at_level_twenty(): void
+    {
+        $progress = $this->service->xpProgress(20, 400000);
+
+        $this->assertSame(100, $progress['percent']);
+        $this->assertTrue($progress['maxed']);
+    }
 }

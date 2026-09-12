@@ -43,7 +43,7 @@
                                 type="search"
                                 x-model="search"
                                 placeholder="Buscar por nome, classe, raça ou campanha..."
-                                class="input-shell pl-10"
+                                class="input-shell !pl-10"
                             >
                         </div>
 
@@ -219,7 +219,7 @@
                                 </div>
                             </div>
 
-                            <a href="{{ route('characters.show', $character) }}" class="golden-button mt-5 justify-center text-sm">
+                            <a href="{{ route('characters.show', $character) }}" class="golden-button mt-5 w-full justify-center text-sm">
                                 Abrir ficha
                             </a>
                         </article>
