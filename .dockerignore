@@ -1,0 +1,17 @@
+node_modules
+vendor
+.git
+.gitignore
+.env
+.env.*
+.phpunit.result.cache
+storage/*.key
+storage/app/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+.phpstorm.meta.php
+npm-debug.log
+yarn-error.log
+Dockerfile
+README.md

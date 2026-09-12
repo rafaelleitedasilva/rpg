@@ -1,0 +1,54 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rpg-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: local
+      APP_DEBUG: true
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: rpg
+      DB_USERNAME: rpg
+      DB_PASSWORD: rpgsecret
+    command: >
+      bash -c "composer install --no-interaction --prefer-dist --no-progress --optimize-autoloader
+      && npm install --no-fund --no-audit
+      && npm run build
+      && php artisan key:generate --force
+      && php artisan migrate --force --seed
+      && php artisan serve --host=0.0.0.0 --port=8000"
+
+  db:
+    image: postgres:16-alpine
+    container_name: rpg-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: rpg
+      POSTGRES_USER: rpg
+      POSTGRES_PASSWORD: rpgsecret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rpg -d rpg"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  postgres_data:
