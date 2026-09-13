@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -59,6 +61,59 @@ class ProfileTest extends TestCase
             ->assertRedirect('/profile');
 
         $this->assertNotNull($user->refresh()->email_verified_at);
+    }
+
+    public function test_bio_can_be_updated(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                'name' => $user->name,
+                'email' => $user->email,
+                'bio' => 'Jogador de RPG desde 2015.',
+            ]);
+
+        $response
+            ->assertSessionHasNoErrors()
+            ->assertRedirect('/profile');
+
+        $this->assertSame('Jogador de RPG desde 2015.', $user->refresh()->bio);
+    }
+
+    public function test_avatar_can_be_uploaded_and_removed(): void
+    {
+        Storage::fake(config('filesystems.default'));
+
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => UploadedFile::fake()->create('avatar.jpg', 100, 'image/jpeg'),
+            ]);
+
+        $response
+            ->assertSessionHasNoErrors()
+            ->assertRedirect('/profile');
+
+        $user->refresh();
+        $this->assertNotNull($user->avatar_path);
+        Storage::disk(config('filesystems.default'))->assertExists($user->avatar_path);
+
+        $previousPath = $user->avatar_path;
+
+        $response = $this
+            ->actingAs($user)
+            ->delete('/profile/avatar');
+
+        $response->assertRedirect('/profile');
+
+        $this->assertNull($user->refresh()->avatar_path);
+        Storage::disk(config('filesystems.default'))->assertMissing($previousPath);
     }
 
     public function test_user_can_delete_their_account(): void

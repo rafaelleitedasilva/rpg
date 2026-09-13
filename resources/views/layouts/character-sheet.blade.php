@@ -33,17 +33,14 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 12 6 8Z" stroke-linejoin="round"/><path d="M10 19a2 2 0 0 0 4 0" stroke-linecap="round"/></svg>
                     </button>
 
-                    @php
-                        $initials = collect(explode(' ', auth()->user()->name))
-                            ->filter()
-                            ->take(2)
-                            ->map(fn ($part) => mb_strtoupper(mb_substr($part, 0, 1)))
-                            ->implode('');
-                    @endphp
                     <x-dropdown align="right" width="48" content-classes="py-1 gh-dropdown-menu">
                         <x-slot name="trigger">
                             <button type="button" class="gh-user-trigger">
-                                <span class="gh-avatar">{{ $initials }}</span>
+                                @if (auth()->user()->avatarUrl())
+                                    <img src="{{ auth()->user()->avatarUrl() }}" alt="" class="gh-avatar gh-avatar-photo">
+                                @else
+                                    <span class="gh-avatar">{{ auth()->user()->initials() }}</span>
+                                @endif
                                 <span class="gh-user-name">{{ auth()->user()->name }}</span>
                                 <svg class="gh-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 7 5 6 5-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </button>

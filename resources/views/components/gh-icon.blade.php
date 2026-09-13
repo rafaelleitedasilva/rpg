@@ -50,6 +50,18 @@
         @case('chevron-down')
             <path d="m6 9 6 6 6-6"/>
             @break
+        @case('camera')
+            <path d="M4 8a2 2 0 0 1 2-2h1.5l1-1.5h7l1 1.5H18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.5"/>
+            @break
+        @case('bell')
+            <path d="M6 8a6 6 0 1 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 12 6 8Z" stroke-linejoin="round"/><path d="M10 19a2 2 0 0 0 4 0" stroke-linecap="round"/>
+            @break
+        @case('sliders')
+            <path d="M5 6h14M5 12h14M5 18h14" stroke-linecap="round"/><circle cx="9" cy="6" r="1.8"/><circle cx="16" cy="12" r="1.8"/><circle cx="8" cy="18" r="1.8"/>
+            @break
+        @case('trash')
+            <path d="M5 7h14M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7m2 0-.7 12a2 2 0 0 1-2 1.9H9.7a2 2 0 0 1-2-1.9L7 7" stroke-linejoin="round"/>
+            @break
         @default
             <circle cx="12" cy="12" r="9"/>
     @endswitch

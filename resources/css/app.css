@@ -922,6 +922,10 @@ textarea {
     font-weight: 700;
 }
 
+.gh-avatar-photo {
+    object-fit: cover;
+}
+
 .gh-user-name {
     font-size: 0.85rem;
     font-weight: 500;
@@ -1507,6 +1511,252 @@ textarea {
     font-size: 0.74rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
+}
+
+/* Account settings: hero banner, sidebar, avatar upload, danger zone */
+.gh-page-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 180px;
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    background: var(--gh-surface);
+    border: 1px solid var(--gh-border);
+    border-radius: var(--gh-radius);
+    overflow: hidden;
+}
+
+.gh-page-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 42ch;
+}
+
+.gh-hero-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(42%, 420px);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 35%);
+    mask-image: linear-gradient(90deg, transparent, #000 35%);
+}
+
+.gh-hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gh-hero-image-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--gh-surface-3), var(--gh-surface-2));
+    color: var(--gh-muted-2);
+}
+
+.gh-hero-image-note svg {
+    width: 2.75rem;
+    height: 2.75rem;
+    opacity: 0.4;
+}
+
+@media (max-width: 640px) {
+    .gh-hero-image {
+        display: none;
+    }
+}
+
+.gh-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gh-accent);
+}
+
+.gh-hero-title {
+    margin-top: 0.4rem;
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    line-height: 1.15;
+    color: var(--gh-text);
+}
+
+.gh-hero-subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.88rem;
+    color: var(--gh-muted);
+}
+
+.gh-sidebar-eyebrow {
+    padding: 0 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gh-muted-2);
+}
+
+.gh-section-nav-item-disabled {
+    color: var(--gh-muted-2);
+    cursor: default;
+}
+
+.gh-section-nav-item-disabled:hover {
+    color: var(--gh-muted-2);
+    background: transparent;
+}
+
+.gh-section-nav-item-disabled .gh-badge {
+    margin-left: auto;
+}
+
+.gh-avatar-upload {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 5.5rem;
+    height: 5.5rem;
+}
+
+.gh-avatar-upload-image,
+.gh-avatar-upload-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--gh-surface-3);
+}
+
+.gh-avatar-upload-image {
+    object-fit: cover;
+}
+
+.gh-avatar-upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gh-muted);
+}
+
+.gh-avatar-upload-placeholder svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+.gh-avatar-upload-edit {
+    position: absolute;
+    right: -0.15rem;
+    bottom: -0.15rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 999px;
+    border: 2px solid var(--gh-surface);
+    background: var(--gh-accent);
+    color: var(--gh-accent-contrast);
+    cursor: pointer;
+}
+
+.gh-avatar-upload-edit:hover {
+    background: var(--gh-accent-hover);
+}
+
+.gh-avatar-upload-edit svg {
+    width: 0.95rem;
+    height: 0.95rem;
+}
+
+.gh-avatar-upload-remove {
+    padding: 0;
+    border: none;
+    background: transparent;
+    font-size: 0.78rem;
+    color: var(--gh-muted);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.gh-avatar-upload-remove:hover {
+    color: var(--gh-danger);
+}
+
+.gh-card-danger {
+    background: var(--gh-danger-bg);
+    border-color: rgba(248, 113, 113, 0.35);
+}
+
+.gh-btn-danger {
+    background: transparent;
+    border-color: rgba(248, 113, 113, 0.45);
+    color: var(--gh-danger);
+}
+
+.gh-btn-danger:hover {
+    background: rgba(248, 113, 113, 0.14);
+}
+
+.gh-sheet .modal-panel {
+    background: var(--gh-surface-2);
+    color: var(--gh-text);
+    border: 1px solid var(--gh-border);
+}
+
+/* Icon-adorned inputs shared by settings and auth-style forms in this scope. */
+.gh-search-wrap {
+    position: relative;
+    flex: 1;
+}
+
+.gh-search-icon {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1rem;
+    height: 1rem;
+    color: var(--gh-muted-2);
+    pointer-events: none;
+}
+
+.gh-input-with-icon {
+    padding-left: 2.5rem;
+}
+
+.gh-input-with-toggle {
+    padding-right: 2.5rem;
+}
+
+.gh-input-toggle {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--gh-muted-2);
+    cursor: pointer;
+}
+
+.gh-input-toggle:hover {
+    color: var(--gh-text);
+}
+
+.gh-input-toggle svg {
+    width: 1.05rem;
+    height: 1.05rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

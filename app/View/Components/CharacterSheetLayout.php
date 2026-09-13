@@ -6,7 +6,8 @@ use Illuminate\View\Component;
 use Illuminate\View\View;
 
 /**
- * Isolated layout used only by the character sheet screens (create/edit/show).
+ * Isolated app shell shared by the character sheet screens (create/edit/show)
+ * and the account settings screens (profile).
  *
  * It intentionally does not reuse `layouts.navigation` or the tavern design
  * tokens from `resources/css/app.css` — it renders its own header and relies
