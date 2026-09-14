@@ -11,35 +11,51 @@ class DashboardController extends Controller
 {
     public function index(): View
     {
+        $characterCount = Character::where('user_id', auth()->id())->count();
+
         $campaigns = Campaign::where('master_id', auth()->id())
+            ->with('acceptedInvites.user')
             ->latest()
             ->take(3)
             ->get();
 
+        $campaignCount = Campaign::where('master_id', auth()->id())->count();
+
         $stats = [
             [
+                'icon' => 'user',
                 'label' => 'Fichas criadas',
-                'value' => Character::where('user_id', auth()->id())->count(),
-                'description' => 'personagens em andamento',
+                'value' => $characterCount,
+                'description' => 'personagens em sua conta',
+                'route' => route('characters.index'),
             ],
             [
+                'icon' => 'sparkles',
                 'label' => 'Magias disponíveis',
                 'value' => Spell::count(),
-                'description' => 'no compêndio D&D 5e',
+                'description' => 'no seu acervo',
+                'route' => route('spells.index'),
             ],
             [
+                'icon' => 'flag',
                 'label' => 'Campanhas',
-                'value' => $campaigns->count(),
-                'description' => 'em preparação',
+                'value' => $campaignCount,
+                'description' => 'em andamento',
+                'route' => route('campaigns.index'),
             ],
             [
+                'icon' => 'calendar',
+                // No scheduling feature exists yet — this is a static placeholder,
+                // not a real count, until sessions become a real resource.
+                'value' => null,
                 'label' => 'Sessões',
-                'value' => 2,
-                'description' => 'atualizadas esta semana',
+                'description' => 'em breve',
+                'route' => null,
             ],
         ];
 
         $recentCharacters = Character::where('user_id', auth()->id())
+            ->with('images')
             ->latest()
             ->take(3)
             ->get();
