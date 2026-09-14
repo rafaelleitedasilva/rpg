@@ -23,4 +23,6 @@ RUN chmod -R 755 /var/www/storage /var/www/bootstrap/cache \
 
 EXPOSE 8000
 
-CMD ["bash", "-lc", "npm install --no-fund --no-audit && npm run build && php artisan serve --host=0.0.0.0 --port=8000"]
+# public/storage is a relative symlink (see docker-compose.yml) so it also
+# resolves correctly when this image is run without the compose bind mount.
+CMD ["bash", "-lc", "npm install --no-fund --no-audit && npm run build && rm -f public/storage && ln -s ../storage/app/public public/storage && php artisan serve --host=0.0.0.0 --port=8000"]

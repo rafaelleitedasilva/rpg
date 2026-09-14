@@ -13,6 +13,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mailhog:
+        condition: service_started
     environment:
       APP_ENV: local
       APP_DEBUG: true
@@ -23,12 +25,23 @@ services:
       DB_DATABASE: rpg
       DB_USERNAME: rpg
       DB_PASSWORD: rpgsecret
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+      MAIL_USERNAME: null
+      MAIL_PASSWORD: null
+      MAIL_ENCRYPTION: null
+    # `public/storage` is created as a *relative* symlink (instead of via
+    # `php artisan storage:link`, which defaults to an absolute path) so it
+    # resolves correctly both inside this container (/var/www) and, since the
+    # project directory is bind-mounted, from the host filesystem too.
     command: >
       bash -c "composer install --no-interaction --prefer-dist --no-progress --optimize-autoloader
       && npm install --no-fund --no-audit
       && npm run build
       && php artisan key:generate --force
       && php artisan migrate --force --seed
+      && rm -f public/storage && ln -s ../storage/app/public public/storage
       && php artisan serve --host=0.0.0.0 --port=8000"
 
   db:
@@ -49,6 +62,14 @@ services:
       timeout: 5s
       retries: 10
       start_period: 10s
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: rpg-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP server (used by the app to send e-mails)
+      - "8025:8025" # Web UI (browse the e-mails sent by the app)
 
 volumes:
   postgres_data:
