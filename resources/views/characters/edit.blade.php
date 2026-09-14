@@ -3,8 +3,8 @@
         <a href="{{ route('characters.index') }}" class="gh-back-link"><x-gh-icon name="arrow-left"/> Voltar para as fichas</a>
 
         <div class="gh-identity-card">
-            @if ($character->portrait_url)
-                <img src="{{ $character->portrait_url }}" alt="" class="gh-identity-portrait">
+            @if ($character->displayPortraitUrl())
+                <img src="{{ $character->displayPortraitUrl() }}" alt="" class="gh-identity-portrait">
             @else
                 <span class="gh-identity-placeholder"><x-gh-icon name="user"/></span>
             @endif
@@ -68,4 +68,56 @@
             </button>
         </div>
     </form>
+
+    {{-- Photo uploads live outside the main form: file uploads need their own
+         multipart request, and HTML does not allow nesting <form> elements.
+         Still gated by the shared Alpine `tab` state, so it appears in place
+         inside the "História" section. --}}
+    <section x-show="tab === 'story'" x-cloak class="gh-card" style="margin-top: 1.25rem">
+        <h3 class="gh-card-title"><x-gh-icon name="user"/> Fotos do personagem</h3>
+        <p class="gh-card-description">Envie uma ou mais imagens. A imagem marcada como capa aparece na listagem e no topo da ficha.</p>
+
+        @error('images')
+            <p class="gh-field-error mt-2">{{ $message }}</p>
+        @enderror
+
+        @if ($character->images->isNotEmpty())
+            <div class="mt-4 grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));">
+                @foreach ($character->images as $image)
+                    <div class="gh-photo-card">
+                        <img src="{{ $image->url() }}" alt="Foto de {{ $character->name }}" class="gh-photo-thumb">
+                        @if ($image->is_cover)
+                            <span class="gh-badge gh-badge-accent gh-photo-cover-badge">Capa</span>
+                        @endif
+                        <div class="gh-photo-actions">
+                            @unless ($image->is_cover)
+                                <form method="POST" action="{{ route('characters.images.cover', [$character, $image]) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="gh-btn gh-btn-secondary">Tornar capa</button>
+                                </form>
+                            @endunless
+                            <form method="POST" action="{{ route('characters.images.destroy', [$character, $image]) }}" onsubmit="return confirm('Remover esta imagem?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="gh-btn gh-btn-ghost gh-photo-danger">Remover</button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+        @if ($character->images->count() < 12)
+            <form method="POST" action="{{ route('characters.images.store', $character) }}" enctype="multipart/form-data" class="mt-5">
+                @csrf
+                <div class="gh-field">
+                    <label class="gh-label" for="images">Adicionar imagens</label>
+                    <input id="images" type="file" name="images[]" multiple accept="image/png,image/jpeg,image/webp,image/gif" class="gh-input">
+                    <p class="gh-hint">JPG, PNG, WEBP ou GIF, até 5MB cada. Máximo de 12 imagens por personagem.</p>
+                </div>
+                <button type="submit" class="gh-btn gh-btn-primary mt-3">Enviar imagens</button>
+            </form>
+        @endif
+    </section>
 </x-character-sheet-layout>
