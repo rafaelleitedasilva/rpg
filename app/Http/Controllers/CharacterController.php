@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Character;
 use App\Modules\Rpg\Services\Dnd5eCharacterService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CharacterController extends Controller
@@ -54,6 +57,61 @@ class CharacterController extends Controller
         $character->loadMissing('user', 'images');
 
         return view('characters.show', compact('character'));
+    }
+
+    /**
+     * Renders the character sheet as a downloadable PDF, styled after the
+     * app's own dark/gold "Guildhall" visual identity (see
+     * resources/views/characters/pdf.blade.php).
+     */
+    public function exportPdf(Character $character): Response
+    {
+        abort_unless($character->user_id === auth()->id(), 403);
+
+        $character->loadMissing('images');
+
+        $pdf = Pdf::loadView('characters.pdf', [
+            'character' => $character,
+            'portraitSrc' => $this->resolvePortraitSrc($character),
+        ])
+            ->setPaper('a4')
+            // The legacy `portrait_url` field (or an S3-backed cover image) is a
+            // plain remote URL; local uploads are embedded as data URIs instead
+            // (see resolvePortraitSrc()) so this is only a fallback path.
+            ->setOption('isRemoteEnabled', true);
+
+        return $pdf->stream(Str::slug($character->name).'-ficha-guildhall.pdf');
+    }
+
+    /**
+     * Resolves the character's portrait for the PDF export. Uploaded cover
+     * images stored on a local disk are embedded as a base64 data URI so
+     * dompdf never has to fetch them over the network; anything else (the
+     * legacy external `portrait_url`, or a remote disk such as S3) is passed
+     * through as a plain URL for dompdf to fetch remotely.
+     */
+    private function resolvePortraitSrc(Character $character): ?string
+    {
+        $url = $character->displayPortraitUrl();
+
+        if (! $url) {
+            return null;
+        }
+
+        $cover = $character->coverImage();
+        $diskName = config('filesystems.default');
+
+        if ($cover && in_array($diskName, ['local', 'public'], true)) {
+            $disk = Storage::disk($diskName);
+
+            if ($disk->exists($cover->path)) {
+                $mime = $disk->mimeType($cover->path) ?: 'image/jpeg';
+
+                return 'data:'.$mime.';base64,'.base64_encode($disk->get($cover->path));
+            }
+        }
+
+        return $url;
     }
 
     public function edit(Character $character): View

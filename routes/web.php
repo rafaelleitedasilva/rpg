@@ -16,6 +16,7 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('characters', CharacterController::class);
+    Route::get('/characters/{character}/pdf', [CharacterController::class, 'exportPdf'])->name('characters.pdf');
     Route::post('/characters/{character}/images', [CharacterImageController::class, 'store'])->name('characters.images.store');
     Route::patch('/characters/{character}/images/{image}/cover', [CharacterImageController::class, 'setCover'])->name('characters.images.cover');
     Route::delete('/characters/{character}/images/{image}', [CharacterImageController::class, 'destroy'])->name('characters.images.destroy');

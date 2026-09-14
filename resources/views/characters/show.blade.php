@@ -24,6 +24,7 @@
         </div>
 
         <a href="{{ route('characters.edit', $character) }}" class="gh-btn gh-btn-primary" style="justify-content:center">Editar ficha</a>
+        <a href="{{ route('characters.pdf', $character) }}" class="gh-btn gh-btn-secondary" style="justify-content:center"><x-gh-icon name="download"/> Exportar PDF</a>
 
         <nav class="gh-section-nav" aria-label="Seções da ficha">
             @foreach ($sections as $key => $section)
@@ -41,6 +42,7 @@
             <p class="gh-page-description">{{ $character->race }} · {{ $character->class }}@if ($character->secondary_class) / {{ $character->secondary_class }}@endif · Nível {{ $character->level }}</p>
         </div>
         <div class="gh-page-actions">
+            <a href="{{ route('characters.pdf', $character) }}" class="gh-btn gh-btn-secondary"><x-gh-icon name="download"/> Exportar PDF</a>
             <a href="{{ route('characters.edit', $character) }}" class="gh-btn gh-btn-primary">Editar ficha</a>
         </div>
     </div>
