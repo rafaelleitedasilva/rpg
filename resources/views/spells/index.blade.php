@@ -179,7 +179,7 @@
                                 @endif
                             </h3>
                             <div class="gh-spell-pills">
-                                <span class="gh-spell-pill"><x-gh-icon name="sparkles"/> {{ $spell->schoolLabel() }}</span>
+                                <span class="gh-spell-pill"><x-gh-icon :name="$spell->schoolIcon()"/> {{ $spell->schoolLabel() }}</span>
                                 <span class="gh-spell-pill"><x-gh-icon name="diamond"/> {{ $spell->rangeLabel() }}</span>
                                 <span class="gh-spell-pill"><x-gh-icon name="calendar"/> {{ $spell->durationLabel() }}</span>
                             </div>

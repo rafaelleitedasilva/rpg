@@ -51,6 +51,17 @@ class Spell extends Model
         return $this->translated ? SpellTranslator::school($this->school) : ($this->school ?: '—');
     }
 
+    /**
+     * The gh-icon name for this spell's school. Independent of the
+     * `translated` flag: the underlying `school` column is always the
+     * English D&D value, so the icon mapping applies regardless of whether
+     * the label itself has been translated.
+     */
+    public function schoolIcon(): string
+    {
+        return SpellTranslator::schoolIcon($this->school);
+    }
+
     public function durationLabel(): string
     {
         return $this->translated ? SpellTranslator::duration($this->duration) : ($this->duration ?: '—');

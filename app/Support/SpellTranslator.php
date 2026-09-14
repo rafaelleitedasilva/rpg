@@ -200,6 +200,30 @@ class SpellTranslator
         return array_diff_key(self::SCHOOL_MAP, ['unknown' => true]);
     }
 
+    /**
+     * One gh-icon name per school of magic, so each school reads as its own
+     * symbol in the catalog instead of sharing a generic sparkle.
+     */
+    private const SCHOOL_ICON_MAP = [
+        'abjuration' => 'shield',
+        'conjuration' => 'portal',
+        'divination' => 'eye',
+        'enchantment' => 'spiral',
+        'evocation' => 'flame',
+        'illusion' => 'mask',
+        'necromancy' => 'skull',
+        'transmutation' => 'cycle',
+    ];
+
+    public static function schoolIcon(?string $value): string
+    {
+        if (! is_string($value) || $value === '') {
+            return 'sparkles';
+        }
+
+        return self::SCHOOL_ICON_MAP[strtolower(trim($value))] ?? 'sparkles';
+    }
+
     private const CLASS_MAP = [
         'wizard' => 'Mago',
         'cleric' => 'Clérigo',
@@ -336,25 +360,17 @@ class SpellTranslator
             return '—';
         }
 
-        $lower = strtolower($value);
+        $lower = self::feetToMeters(strtolower($value));
 
         $replacements = [
             'self' => 'Pessoal',
             'touch' => 'Toque',
             'sight' => 'Visão',
-            'feet' => 'pés',
-            'foot' => 'pé',
             'miles' => 'milhas',
             'mile' => 'milha',
             'unlimited' => 'ilimitada',
             'special' => 'especial',
             'radius' => 'raio',
-            '120 feet' => '120 pés',
-            '60 feet' => '60 pés',
-            '30 feet' => '30 pés',
-            '10 feet' => '10 pés',
-            '15 feet' => '15 pés',
-            '30-foot' => '30 pés',
         ];
 
         foreach ($replacements as $needle => $replacement) {
@@ -362,6 +378,28 @@ class SpellTranslator
         }
 
         return ucwords($lower);
+    }
+
+    /**
+     * D&D distances convert to metric at a flat 1 foot = 0.3 meters — the
+     * same factor the official metric conversion charts use, which happens
+     * to land every common 5e distance (5, 10, 15, 30, 60, 90, 120, 150,
+     * 300, 500 ft...) on a clean number of meters.
+     */
+    private static function feetToMeters(string $text): string
+    {
+        $converted = preg_replace_callback(
+            '/(\d+(?:\.\d+)?)-?\s?(?:feet|foot|ft\.?)\b/i',
+            static function (array $matches): string {
+                $meters = ((float) $matches[1]) * 0.3;
+                $decimals = $meters == floor($meters) ? 0 : 1;
+
+                return number_format($meters, $decimals, ',', '.').' metros';
+            },
+            $text
+        );
+
+        return $converted ?? $text;
     }
 
     public static function components(?string $value): string
@@ -428,14 +466,14 @@ class SpellTranslator
             return '—';
         }
 
-        $text = $value;
+        $text = self::feetToMeters($value);
         $replacements = [
             'You hurl' => 'Você arremessa',
             'a bubble of acid.' => 'uma bolha de ácido.',
             'Choose one creature' => 'Escolha uma criatura',
             'within range' => 'dentro do alcance',
             'or choose two creatures' => 'ou escolha duas criaturas',
-            'that are within 5 feet of each other.' => 'que estejam a 5 pés de distância uma da outra.',
+            'that are within 1,5 metros of each other.' => 'que estejam a 1,5 metros de distância uma da outra.',
             'must succeed on a dexterity saving throw' => 'deve fazer um teste de resistência de destreza',
             'damage.' => 'de dano.',
             'You create' => 'Você cria',
@@ -444,7 +482,6 @@ class SpellTranslator
             'A creature that touches the target' => 'Uma criatura que tocar a alvo',
             'for the duration' => 'pela duração',
             'up to' => 'até',
-            'feet' => 'pés',
             'of' => 'de',
             'can' => 'pode',
             'and' => 'e',

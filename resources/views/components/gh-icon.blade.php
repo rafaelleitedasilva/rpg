@@ -9,7 +9,7 @@
             <path d="M12 3.5 5 6v5.5c0 4.4 2.9 7.5 7 9 4.1-1.5 7-4.6 7-9V6l-7-2.5Z"/>
             @break
         @case('sparkles')
-            <path d="M11 3v4M11 15v4M4 9h4M14 9h4M6 6l2 2M15 11l2 2M16 6l-2 2M8 11l-2 2"/>
+            <path d="M9.9 15.5a2 2 0 0 0-1.4-1.4L2.4 12.5a.5.5 0 0 1 0-1l6.1-1.6a2 2 0 0 0 1.4-1.4l1.6-6.1a.5.5 0 0 1 1 0l1.6 6.1a2 2 0 0 0 1.4 1.4l6.1 1.6a.5.5 0 0 1 0 1l-6.1 1.6a2 2 0 0 0-1.4 1.4l-1.6 6.1a.5.5 0 0 1-1 0Z" stroke-linejoin="round"/><path d="M20 3v4M22 5h-4M4 17v2M5 18H3"/>
             @break
         @case('sword')
             <path d="M14.5 3.5 20.5 9.5 10 20l-4-4L16.5 6l-2-2Z"/><path d="M3.5 20.5 6 18"/>
@@ -121,6 +121,22 @@
             @break
         @case('leaf')
             <path d="M20 4C10 4 4 10 4 18c0 .5.5 1 1 1 8 0 14-6 14-15 0-.5-.5-1-1-1Z" stroke-linejoin="round"/><path d="M6.5 17.5c3.5-2 7-5.5 9-11" stroke-linecap="round"/>
+            @break
+        @case('portal')
+            {{-- Conjuração: um círculo de invocação, com marcas nos quatro pontos cardeais. --}}
+            <circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="3.2"/><path d="M12 3v1.6M12 19.4V21M3 12h1.6M19.4 12H21" stroke-linecap="round"/>
+            @break
+        @case('spiral')
+            {{-- Encantamento: um redemoinho hipnótico convergindo para um ponto. --}}
+            <path d="M12 4a8 8 0 1 0 8 8" stroke-linecap="round"/><path d="M12 7.2a4.8 4.8 0 1 0 4.8 4.8" stroke-linecap="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+            @break
+        @case('mask')
+            {{-- Ilusão: uma máscara/véu com olhos e sorriso pontilhados. --}}
+            <path d="M4.5 8.5c0-3 3.3-5 7.5-5s7.5 2 7.5 5c0 5.5-3.2 10-7.5 12.5C7.7 18.5 4.5 14 4.5 8.5Z" stroke-linejoin="round"/><path d="M8.5 9.5h1.4M14.1 9.5h1.4" stroke-linecap="round"/><path d="M9 13.5c1 .7 2 1 3 1s2-.3 3-1"/>
+            @break
+        @case('cycle')
+            {{-- Transmutação: duas setas em arco, representando transformação. --}}
+            <path d="M4 9a8 8 0 0 1 13.8-5.6M20 5v4h-4"/><path d="M20 15a8 8 0 0 1-13.8 5.6M4 19v-4h4"/>
             @break
         @default
             <circle cx="12" cy="12" r="9"/>
