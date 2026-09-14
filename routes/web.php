@@ -3,6 +3,7 @@
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MonsterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SpellController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('characters', CharacterController::class);
     Route::get('/spells', [SpellController::class, 'index'])->name('spells.index');
+    Route::get('/monsters', [MonsterController::class, 'index'])->name('monsters.index');
+    Route::get('/monsters/{monster}', [MonsterController::class, 'show'])->name('monsters.show');
     Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
     Route::get('/campaigns/create', [CampaignController::class, 'create'])->name('campaigns.create');
     Route::get('/campaigns/{campaign}', [CampaignController::class, 'show'])->name('campaigns.show');

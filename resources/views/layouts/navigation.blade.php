@@ -11,6 +11,7 @@
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
                     <a href="{{ route('characters.index') }}" class="nav-link {{ request()->routeIs('characters.*') ? 'active' : '' }}">Fichas</a>
                     <a href="{{ route('spells.index') }}" class="nav-link {{ request()->routeIs('spells.*') ? 'active' : '' }}">Magias</a>
+                    <a href="{{ route('monsters.index') }}" class="nav-link {{ request()->routeIs('monsters.*') ? 'active' : '' }}">Monstros</a>
                     <a href="{{ route('campaigns.index') }}" class="nav-link {{ request()->routeIs('campaigns.*') ? 'active' : '' }}">Campanhas</a>
                     <a href="{{ route('friends.index') }}" class="nav-link {{ request()->routeIs('friends.*') ? 'active' : '' }}">Amigos</a>
                 </div>
@@ -40,6 +41,7 @@
             <a href="{{ route('dashboard') }}" class="block rounded-xl px-3 py-2 hover:bg-[#2a201a]">Dashboard</a>
             <a href="{{ route('characters.index') }}" class="block rounded-xl px-3 py-2 hover:bg-[#2a201a]">Fichas</a>
             <a href="{{ route('spells.index') }}" class="block rounded-xl px-3 py-2 hover:bg-[#2a201a]">Magias</a>
+            <a href="{{ route('monsters.index') }}" class="block rounded-xl px-3 py-2 hover:bg-[#2a201a]">Monstros</a>
             <a href="{{ route('campaigns.index') }}" class="block rounded-xl px-3 py-2 hover:bg-[#2a201a]">Campanhas</a>
             <a href="{{ route('friends.index') }}" class="block rounded-xl px-3 py-2 hover:bg-[#2a201a]">Amigos</a>
             <a href="{{ route('profile.edit') }}" class="block rounded-xl px-3 py-2 hover:bg-[#2a201a]">Perfil</a>

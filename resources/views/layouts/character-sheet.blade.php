@@ -19,8 +19,9 @@
 
                 <nav class="gh-nav" aria-label="Navegação principal">
                     <a href="{{ route('dashboard') }}" class="gh-nav-link" @if (request()->routeIs('dashboard')) aria-current="page" @endif>Dashboard</a>
-                    <a href="{{ route('characters.index') }}" class="gh-nav-link gh-nav-link-active" aria-current="page">Fichas</a>
+                    <a href="{{ route('characters.index') }}" class="gh-nav-link" @if (request()->routeIs('characters.*')) aria-current="page" @endif>Fichas</a>
                     <a href="{{ route('spells.index') }}" class="gh-nav-link" @if (request()->routeIs('spells.*')) aria-current="page" @endif>Magias</a>
+                    <a href="{{ route('monsters.index') }}" class="gh-nav-link" @if (request()->routeIs('monsters.*')) aria-current="page" @endif>Monstros</a>
                     <a href="{{ route('campaigns.index') }}" class="gh-nav-link" @if (request()->routeIs('campaigns.*')) aria-current="page" @endif>Campanhas</a>
                     <a href="{{ route('friends.index') }}" class="gh-nav-link" @if (request()->routeIs('friends.*')) aria-current="page" @endif>Amigos</a>
                 </nav>
