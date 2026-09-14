@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('spells:sync')->weeklyOn(1, '03:00');
+        $schedule->command('monsters:sync')->weeklyOn(1, '03:30');
     }
 
     /**

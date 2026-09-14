@@ -52,4 +52,12 @@ class Campaign extends Model
     {
         return $this->hasMany(CampaignInvite::class);
     }
+
+    /**
+     * Invites that have been accepted — i.e. the campaign's current players.
+     */
+    public function acceptedInvites()
+    {
+        return $this->invites()->where('status', 'accepted');
+    }
 }
