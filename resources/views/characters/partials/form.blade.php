@@ -444,11 +444,23 @@
                         </div>
                     @endforeach
                     <div class="gh-field sm:col-span-2 xl:col-span-3">
-                        <label class="gh-label" for="portrait_url">Retrato (URL da imagem)</label>
+                        <label class="gh-label" for="portrait_url">
+                            Retrato (URL externa)
+                            <x-gh-tooltip label="Quando isso é usado?">Usada apenas se você não enviar nenhuma foto na seção "Fotos do personagem" abaixo.</x-gh-tooltip>
+                        </label>
                         <input id="portrait_url" type="url" name="portrait_url" value="{{ $val('portrait_url') }}" class="gh-input" placeholder="https://...">
                     </div>
                 </div>
             </div>
+
+            @if ($c)
+                <p class="gh-hint" style="margin-top: -0.5rem;">As fotos enviadas do personagem aparecem logo abaixo.</p>
+            @else
+                <div class="gh-card">
+                    <h3 class="gh-card-title">Fotos do personagem</h3>
+                    <p class="gh-card-description">Você poderá enviar fotos do personagem depois de criar a ficha.</p>
+                </div>
+            @endif
 
             <div class="gh-card">
                 <h3 class="gh-card-title">Notas</h3>

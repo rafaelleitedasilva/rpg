@@ -6,6 +6,7 @@ use App\Models\Character;
 use App\Modules\Rpg\Services\Dnd5eCharacterService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CharacterController extends Controller
@@ -16,7 +17,7 @@ class CharacterController extends Controller
 
     public function index(): View
     {
-        $characters = Character::where('user_id', auth()->id())->latest()->get();
+        $characters = Character::where('user_id', auth()->id())->with('images')->latest()->get();
 
         $campaignsCount = $characters->pluck('campaign_name')->filter()->unique()->count();
 
@@ -50,7 +51,7 @@ class CharacterController extends Controller
     {
         abort_unless($character->user_id === auth()->id(), 403);
 
-        $character->loadMissing('user');
+        $character->loadMissing('user', 'images');
 
         return view('characters.show', compact('character'));
     }
@@ -58,6 +59,8 @@ class CharacterController extends Controller
     public function edit(Character $character): View
     {
         abort_unless($character->user_id === auth()->id(), 403);
+
+        $character->loadMissing('images');
 
         return view('characters.edit', compact('character'));
     }
@@ -78,9 +81,12 @@ class CharacterController extends Controller
     {
         abort_unless($character->user_id === auth()->id(), 403);
 
+        $disk = Storage::disk(config('filesystems.default'));
+        $character->images->each(fn ($image) => $disk->delete($image->path));
+
         $character->delete();
 
-        return redirect()->route('characters.index');
+        return redirect()->route('characters.index')->with('status', 'Ficha excluída.');
     }
 
     private function validateCharacterData(Request $request): array

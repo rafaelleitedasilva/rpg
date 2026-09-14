@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CharacterController;
+use App\Http\Controllers\CharacterImageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MonsterController;
 use App\Http\Controllers\ProfileController;
@@ -15,6 +16,9 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('characters', CharacterController::class);
+    Route::post('/characters/{character}/images', [CharacterImageController::class, 'store'])->name('characters.images.store');
+    Route::patch('/characters/{character}/images/{image}/cover', [CharacterImageController::class, 'setCover'])->name('characters.images.cover');
+    Route::delete('/characters/{character}/images/{image}', [CharacterImageController::class, 'destroy'])->name('characters.images.destroy');
     Route::get('/spells', [SpellController::class, 'index'])->name('spells.index');
     Route::get('/monsters', [MonsterController::class, 'index'])->name('monsters.index');
     Route::get('/monsters/{monster}', [MonsterController::class, 'show'])->name('monsters.show');

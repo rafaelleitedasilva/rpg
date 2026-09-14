@@ -12,8 +12,8 @@
         <a href="{{ route('characters.index') }}" class="gh-back-link"><x-gh-icon name="arrow-left"/> Voltar para as fichas</a>
 
         <div class="gh-identity-card">
-            @if ($character->portrait_url)
-                <img src="{{ $character->portrait_url }}" alt="" class="gh-identity-portrait">
+            @if ($character->displayPortraitUrl())
+                <img src="{{ $character->displayPortraitUrl() }}" alt="" class="gh-identity-portrait">
             @else
                 <span class="gh-identity-placeholder"><x-gh-icon name="user"/></span>
             @endif
@@ -258,6 +258,22 @@
                 @foreach ($appearance as $key => $label)
                     <div class="gh-stat"><p class="gh-stat-label">{{ $label }}</p><p class="mt-1 text-sm" style="color: var(--gh-text)">{{ $character->$key }}</p></div>
                 @endforeach
+            </div>
+        @endif
+
+        @if ($character->images->isNotEmpty())
+            <div class="mt-4">
+                <p class="gh-stat-label">Fotos</p>
+                <div class="mt-2 grid gap-3" style="grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));">
+                    @foreach ($character->images as $image)
+                        <div class="gh-photo-card">
+                            <img src="{{ $image->url() }}" alt="Foto de {{ $character->name }}" class="gh-photo-thumb">
+                            @if ($image->is_cover)
+                                <span class="gh-badge gh-badge-accent gh-photo-cover-badge">Capa</span>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
             </div>
         @endif
 

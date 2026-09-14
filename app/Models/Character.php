@@ -6,6 +6,7 @@ use App\Modules\Rpg\Services\Dnd5eCharacterService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Character extends Model
 {
@@ -134,6 +135,27 @@ class Character extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(CharacterImage::class)->orderByDesc('is_cover')->orderBy('position');
+    }
+
+    public function coverImage(): ?CharacterImage
+    {
+        return $this->images->firstWhere('is_cover', true) ?? $this->images->first();
+    }
+
+    /**
+     * The image URL that should represent this character wherever a single
+     * portrait is shown: the uploaded cover image if there is one, falling
+     * back to the legacy `portrait_url` link field, or null for a
+     * placeholder (initials/icon).
+     */
+    public function displayPortraitUrl(): ?string
+    {
+        return $this->coverImage()?->url() ?? $this->portrait_url;
     }
 
     public function spellSlots(): array
