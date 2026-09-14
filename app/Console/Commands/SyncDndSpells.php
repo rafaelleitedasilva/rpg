@@ -3,19 +3,23 @@
 namespace App\Console\Commands;
 
 use App\Models\Spell;
+use App\Services\TextTranslationService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
 class SyncDndSpells extends Command
 {
-    protected $signature = 'spells:sync {--fresh : Remove existing spell records before import}';
+    protected $signature = 'spells:sync
+        {--fresh : Remove existing spell records before import}
+        {--no-translate : Importa apenas em inglês, sem consultar o serviço de tradução}';
 
     protected $aliases = ['rpg:sync-spells'];
 
     protected $description = 'Sincroniza a base de magias do sistema D&D 5e com a API oficial.';
 
-    public function handle(): int
+    public function handle(TextTranslationService $translator): int
     {
+        $translate = ! $this->option('no-translate');
         if ($this->option('fresh')) {
             Spell::query()->delete();
         }
@@ -60,6 +64,7 @@ class SyncDndSpells extends Command
 
             $classes = array_values(array_map(static fn ($item) => $item['name'] ?? '', $payload['classes'] ?? []));
             $races = array_values(array_map(static fn ($item) => $item['name'] ?? '', $payload['races'] ?? []));
+            $description = implode(' ', $payload['desc'] ?? []);
 
             Spell::updateOrCreate(
                 ['name' => $spellName],
@@ -72,9 +77,11 @@ class SyncDndSpells extends Command
                     'duration' => $payload['duration'] ?? 'Instantânea',
                     'concentration' => (bool) ($payload['concentration'] ?? false),
                     'ritual' => (bool) ($payload['ritual'] ?? false),
-                    'description' => implode(' ', $payload['desc'] ?? []),
+                    'description' => $description,
+                    'description_pt' => $translate ? $translator->translate($description) : null,
                     'classes' => array_values(array_filter($classes, static fn ($value) => $value !== '')),
                     'races' => array_values(array_filter($races, static fn ($value) => $value !== '')),
+                    'translated' => $translate,
                 ]
             );
 

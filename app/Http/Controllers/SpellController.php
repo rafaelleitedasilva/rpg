@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Spell;
+use App\Support\SpellTranslator;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -24,6 +25,10 @@ class SpellController extends Controller
             $query->where('level', (int) $request->level);
         }
 
+        if ($request->filled('school')) {
+            $query->where('school', $request->string('school')->value());
+        }
+
         if ($request->filled('class')) {
             $query->whereJsonContains('classes', $request->class);
         }
@@ -33,18 +38,30 @@ class SpellController extends Controller
             $query->where(function ($query) use ($race) {
                 $query->whereJsonContains('races', $race)
                     ->orWhereNull('races')
-                    ->orWhere('races', '[]');
+                    // An empty `races` array means "available to every race" —
+                    // comparing a json/jsonb column with `= '[]'` has no valid
+                    // operator on Postgres, so check its length instead.
+                    ->orWhereJsonLength('races', 0);
             });
         }
 
-        $spells = $query->orderBy('level')->orderBy('name')->paginate(12)->withQueryString();
+        match ($request->input('sort')) {
+            'name' => $query->orderBy('name'),
+            'level_desc' => $query->orderByDesc('level')->orderBy('name'),
+            default => $query->orderBy('level')->orderBy('name'),
+        };
+
+        $spells = $query->paginate(12)->withQueryString();
 
         return view('spells.index', [
             'spells' => $spells,
             'search' => $search,
             'level' => $request->input('level'),
+            'school' => $request->input('school'),
             'class' => $request->input('class'),
             'race' => $request->input('race'),
+            'sort' => $request->input('sort', 'level'),
+            'schools' => SpellTranslator::schools(),
         ]);
     }
 }

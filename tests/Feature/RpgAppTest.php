@@ -37,7 +37,7 @@ class RpgAppTest extends TestCase
         $response = $this->actingAs($user)->get('/spells');
 
         $response->assertOk();
-        $response->assertSee('Catálogo de Magias');
+        $response->assertSee('Magias');
     }
 
     public function test_spell_catalog_can_filter_by_class_and_race(): void

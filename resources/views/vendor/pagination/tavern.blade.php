@@ -1,5 +1,5 @@
 @if ($paginator->hasPages())
-    <nav class="tavern-pagination" aria-label="Paginação de magias">
+    <nav class="tavern-pagination" aria-label="Paginação de resultados">
         @if ($paginator->onFirstPage())
             <span class="disabled" aria-disabled="true" aria-label="Página anterior">&lsaquo;</span>
         @else

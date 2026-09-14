@@ -186,9 +186,19 @@ class SpellTranslator
         'illusion' => 'Ilusão',
         'necromancy' => 'Necromancia',
         'transmutation' => 'Transmutação',
-        'transmutation' => 'Transmutação',
         'unknown' => 'Desconhecida',
     ];
+
+    /**
+     * The eight schools of magic, keyed by the English value stored on the
+     * spell (used for the "Escola" filter dropdown).
+     *
+     * @return array<string, string>
+     */
+    public static function schools(): array
+    {
+        return array_diff_key(self::SCHOOL_MAP, ['unknown' => true]);
+    }
 
     private const CLASS_MAP = [
         'wizard' => 'Mago',
