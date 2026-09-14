@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ $title ?? 'Ficha de personagem' }} — Guildhall</title>
+        @include('layouts.partials.favicon')
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
